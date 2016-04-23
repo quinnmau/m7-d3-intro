@@ -26,11 +26,35 @@ var exam3 = [
 // You'll have to wait for you page to load to assign events to the elements created in your index.html file
 $(function() {
   // Select SVG
-
+  var svg = d3.select('#my-svg')
+                .attr('width', 500)
+                .attr('height', 500);
   // Reusable draw function
+  var draw = function(data) {
+      var rects = svg.selectAll('rect')
+                        .data(data, function(d) {return d.id});
+                        
+        rects.enter()
+            .append('rect')
+            .attr('width', 0)
+            .attr('fill', 'blue')
+            .attr('opacity', 0.7);
+            
+        rects.transition()
+            .duration(500)
+            .attr('width', function(d) {return d.grade})
+            .attr('height', 20)
+            .attr('x', 20)
+            .attr('y', function(d) {return +d.id*40});
+            
+        rects.exit()
+            .transition()
+            .duration(500)
+            .attr('width', 0)
+            .remove();
+  }
 
     // Bind data to selection of rects in your svg
-
 
     // Enter rect elements
 
@@ -54,6 +78,14 @@ $(function() {
     
 
   // Assign a click event for buttons. Use switch/case to apply logic of which data to use.
-
+  $('button').on('click', function() {
+      if ($(this).val() == 'exam1') {
+          draw(exam1);
+      } else if ($(this).val() == 'exam2') {
+          draw(exam2);
+      } else {
+          draw(exam3);
+      }
+  })
 
 });
